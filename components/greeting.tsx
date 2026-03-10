@@ -1,6 +1,17 @@
+"use client";
+
 import { motion } from "framer-motion";
 
+function getTimeOfDayGreeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning!";
+  if (hour < 17) return "Good afternoon!";
+  return "Good evening!";
+}
+
 export const Greeting = () => {
+  const greeting = getTimeOfDayGreeting();
+
   return (
     <div
       className="mx-auto mt-4 flex size-full max-w-3xl flex-col justify-center px-4 md:mt-16 md:px-8"
@@ -13,7 +24,7 @@ export const Greeting = () => {
         initial={{ opacity: 0, y: 10 }}
         transition={{ delay: 0.5 }}
       >
-        Hello there!
+        {greeting}
       </motion.div>
       <motion.div
         animate={{ opacity: 1, y: 0 }}
