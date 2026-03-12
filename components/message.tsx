@@ -29,6 +29,7 @@ const PurePreviewMessage = ({
   message,
   vote,
   isLoading,
+  isLastMessage,
   setMessages,
   regenerate,
   isReadonly,
@@ -39,6 +40,7 @@ const PurePreviewMessage = ({
   message: ChatMessage;
   vote: Vote | undefined;
   isLoading: boolean;
+  isLastMessage: boolean;
   setMessages: UseChatHelpers<ChatMessage>["setMessages"];
   regenerate: UseChatHelpers<ChatMessage>["regenerate"];
   isReadonly: boolean;
@@ -349,9 +351,11 @@ const PurePreviewMessage = ({
           {!isReadonly && (
             <MessageActions
               chatId={chatId}
+              isLastMessage={isLastMessage}
               isLoading={isLoading}
               key={`action-${message.id}`}
               message={message}
+              regenerate={regenerate}
               setMode={setMode}
               vote={vote}
             />

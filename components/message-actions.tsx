@@ -1,8 +1,10 @@
 import equal from "fast-deep-equal";
+import { RotateCcwIcon } from "lucide-react";
 import { memo } from "react";
 import { toast } from "sonner";
 import { useSWRConfig } from "swr";
 import { useCopyToClipboard } from "usehooks-ts";
+import type { UseChatHelpers } from "@ai-sdk/react";
 import type { Vote } from "@/lib/db/schema";
 import type { ChatMessage } from "@/lib/types";
 import { Action, Actions } from "./elements/actions";
@@ -13,13 +15,17 @@ export function PureMessageActions({
   message,
   vote,
   isLoading,
+  isLastMessage,
   setMode,
+  regenerate,
 }: {
   chatId: string;
   message: ChatMessage;
   vote: Vote | undefined;
   isLoading: boolean;
+  isLastMessage?: boolean;
   setMode?: (mode: "view" | "edit") => void;
+  regenerate?: UseChatHelpers<ChatMessage>["regenerate"];
 }) {
   const { mutate } = useSWRConfig();
   const [_, copyToClipboard] = useCopyToClipboard();
@@ -72,6 +78,16 @@ export function PureMessageActions({
       <Action onClick={handleCopy} tooltip="Copy">
         <CopyIcon />
       </Action>
+
+      {isLastMessage && regenerate && (
+        <Action
+          data-testid="message-regenerate"
+          onClick={() => regenerate()}
+          tooltip="Regenerate response"
+        >
+          <RotateCcwIcon size={14} />
+        </Action>
+      )}
 
       <Action
         data-testid="message-upvote"
@@ -181,6 +197,9 @@ export const MessageActions = memo(
       return false;
     }
     if (prevProps.isLoading !== nextProps.isLoading) {
+      return false;
+    }
+    if (prevProps.isLastMessage !== nextProps.isLastMessage) {
       return false;
     }
 
